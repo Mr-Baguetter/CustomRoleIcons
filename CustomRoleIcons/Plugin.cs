@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LabApi.Events.CustomHandlers;
+using MEC;
 using static PlayerList;
 
 namespace CustomRoleIcons
@@ -20,13 +22,17 @@ namespace CustomRoleIcons
         public override PluginPriority Priority => PluginPriority.Default;
         public static Plugin Instance;
 
+        public RABadgeHandler Events { get; } = new();
+
         public override void OnEnabled()
         {
             Instance = this;
 
-            _harmony = new Harmony($"com.mrbaguetter.customroleicons-{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
-            _harmony.PatchAll();
-
+            // _harmony = new Harmony($"com.mrbaguetter.customroleicons-{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
+            // Timing.WaitForSeconds(1); // To wait for CedMod to load everything
+            // _harmony.PatchAll();
+            
+            CustomHandlersManager.RegisterEventsHandler(Events);
             base.OnEnabled();
         }
 
@@ -34,8 +40,10 @@ namespace CustomRoleIcons
         {
             Instance = null;
 
-            _harmony.UnpatchAll();
-            _harmony = null;
+            // _harmony.UnpatchAll();
+            // _harmony = null;
+            
+            CustomHandlersManager.UnregisterEventsHandler(Events);
             base.OnDisabled();
         }
 
