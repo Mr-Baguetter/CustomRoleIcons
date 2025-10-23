@@ -1,8 +1,10 @@
-﻿namespace CustomRoleIcons
+﻿using System.Collections.Generic;
+
+namespace CustomRoleIcons
 {
     public class BadgeInfo
     {
-        public string Icon { get; set; }
-        public string Color { get; set; }
+        public List<string> Icon { get; set; }
+        public List<string> Color { get; set; }
     }
 }
