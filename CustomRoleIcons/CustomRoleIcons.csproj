@@ -46,16 +46,13 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="Assembly-Csharp-firstpass">
-      <HintPath>$(SCPSL_References)\LabAPI\Assembly-Csharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.API">
-      <HintPath>$(SCPSL_References)\Exiled\SCP Secret Laboratory\LabAPI\dependencies\global\Exiled.API.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\Assembly-Csharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(SCPSL_References)\LabAPI\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>$(SCPSL_References)\LabAPI\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

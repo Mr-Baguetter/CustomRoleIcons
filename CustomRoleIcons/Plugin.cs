@@ -17,7 +17,7 @@ namespace CustomRoleIcons
         public override string Name => "CustomRoleIcons";
         public override string Author => "Mr. Baguetter";
         public override Version RequiredExiledVersion { get; } = new(9, 9, 2);
-		public override Version Version { get; } = new(1, 0, 0);
+		public override Version Version { get; } = new(1, 0, 1);
 		internal Harmony _harmony;
         public override PluginPriority Priority => PluginPriority.Default;
         public static Plugin Instance;
