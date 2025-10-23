@@ -10,7 +10,7 @@ namespace CustomRoleIcons
         public bool Debug { get; set; }
         public Dictionary<string, BadgeInfo> Badges { get; set; } = new Dictionary<string, BadgeInfo>
         {
-            ["owner"] = new BadgeInfo { Icon = "💻", Color = "emerald" },
+            ["owner"] = new BadgeInfo { Icon = ["💻", "🔧"], Color = ["emerald", "yellow"]},
         };
     }
 }

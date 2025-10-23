@@ -1,35 +1,40 @@
-﻿using Exiled.API.Features;
-using HarmonyLib;
-using RemoteAdmin.Communication;
-using System.Security.Policy;
+﻿using System.Linq;
+using Exiled.API.Extensions;
+using Exiled.API.Features;
+using LabApi.Events.Arguments.PlayerEvents;
+using LabApi.Events.CustomHandlers;
 
-namespace CustomRoleIcons
-{
-    [HarmonyPatch(typeof(RaPlayerList), nameof(RaPlayerList.GetPrefix))]
-    internal static class RemoteAdminPatch
-    {
-        public static void Postfix(ref string __result, ReferenceHub hub, bool viewHiddenBadges = false, bool viewHiddenGlobalBadges = false)
-        {
-            Player player = Player.Get(hub);
+namespace CustomRoleIcons;
 
-            if (player == null || player.Group == null || string.IsNullOrEmpty(player.Group.Name))
-                return;
+public class RABadgeHandler : CustomEventsHandler {
+    public override void OnPlayerRaPlayerListAddingPlayer(PlayerRaPlayerListAddingPlayerEventArgs ev) {
+        Log.Debug("----------");
+        Log.Debug($"Player: {ev.Player}");
+        Log.Debug($"Prefix:  {ev.Prefix}");
+        Log.Debug($"Body: {ev.Body}");
+        Log.Debug($"Target: {ev.Target}");
+        Log.Debug($"Target Builder:  {ev.TargetBuilder}");
+        
+        var badgeInfo = Plugin.Instance.Config.Badges[ev.Player.UserGroup.GetKey()];
+        string customBadge = "<link=RA_Admin><color=white>";
+        
+        foreach (var badgeIcon in badgeInfo.Icon) {
+            var inconIndex = badgeInfo.Icon.IndexOf(badgeIcon);
 
-            if (!Plugin.Instance.Config.Badges.ContainsKey(player.Group.Name))
-                return;
-
-            var badgeInfo = Plugin.Instance.Config.Badges[player.Group.Name];
-            string customIcon = badgeInfo.Icon;
-            string badgeColor = badgeInfo.Color;
-
-            if (Plugin.colorMap.TryGetValue(badgeColor, out string hexcolor))
-            {
-                string originalAdminBadge = "<link=RA_Admin><color=white>[\uf406]</color></link> ";
-                string customBadge = $"<link=RA_Admin><color=white>[<color={hexcolor}>{customIcon}</color>]</color></link> ";
-
-                if (__result.Contains(originalAdminBadge))
-                    __result = __result.Replace(originalAdminBadge, customBadge);
+            if (badgeInfo.Color == null) {
+                customBadge += $"[<color=#FFFFFF>{badgeIcon}</color>]";
+            } else if (badgeInfo.Color.Count > 1) {
+                if (Plugin.colorMap.TryGetValue(badgeInfo.Color[inconIndex], out string hexColor)) { customBadge += $"[<color={hexColor}>{badgeIcon}</color>]"; } 
+                else if (badgeInfo.Color[inconIndex].Contains('#')) { customBadge += $"[<color={badgeInfo.Color[inconIndex]}>{badgeIcon}</color>]"; } 
+                else { customBadge += $"[<color=#FFFFFF>{badgeIcon}</color>]"; }
+            } else {
+                if (Plugin.colorMap.TryGetValue(badgeInfo.Color[0], out string hexColor)) { customBadge += $"[<color={hexColor}>{badgeIcon}</color>]"; }
+                else if (badgeInfo.Color[0].Contains('#')) { customBadge += $"[<color={badgeInfo.Color[0]}>{badgeIcon}</color>]"; }
+                else { customBadge += $"[<color=#FFFFFF>{badgeIcon}</color>]"; }
             }
         }
+        
+        customBadge += "</color></link> ";
+        ev.Prefix = customBadge;
     }
 }
